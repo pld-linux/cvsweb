@@ -47,14 +47,12 @@ install -d $RPM_BUILD_ROOT/{home/httpd/cgi-bin,%{_sysconfdir}}
 install cvsweb.cgi $RPM_BUILD_ROOT/home/httpd/cgi-bin
 install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
-gzip -9nf INSTALL README TODO
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz
+%doc INSTALL README TODO
 %doc icons
 %attr(755,root,root) /home/httpd/cgi-bin/cvsweb.cgi
 %config(noreplace) %{_sysconfdir}/cvsweb.conf
