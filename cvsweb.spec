@@ -11,7 +11,7 @@ URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
 Patch0:		%{name}-config.patch
 Requires:	rcs
-Requires:	httpd
+Requires:	webserver
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
 
@@ -21,7 +21,7 @@ is an enhanced cvsweb developed by Henner Zeller. Enhancements include
 recognition and display of popular mime-types, visual, color-coded,
 side by side diffs of changes and the ability sort the file display
 and to hide old files from view. One living example of the enhanced
-cvsweb is the KDE cvsweb
+cvsweb is the KDE cvsweb.
 
 cvsweb requires the server to have cvs and a cvs repository worth
 exploring.
