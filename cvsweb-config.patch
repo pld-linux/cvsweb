@@ -1,6 +1,6 @@
-diff -Nura cvsweb-3.0.1.orig/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
---- cvsweb-3.0.1.orig/cvsweb.cgi	2004-05-08 16:13:40.000000000 +0200
-+++ cvsweb-3.0.1.new/cvsweb.cgi	2004-08-18 22:55:57.000000000 +0200
+diff -Nur cvsweb-3.0.1/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
+--- cvsweb-3.0.1/cvsweb.cgi	2004-05-08 16:13:40.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.cgi	2004-08-19 14:06:58.000000000 +0200
 @@ -214,7 +214,7 @@
  
  # == EDIT this ==
@@ -10,9 +10,9 @@ diff -Nura cvsweb-3.0.1.orig/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
    if (-r $_) {
      $config = $_;
      last;
-diff -Nura cvsweb-3.0.1.orig/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
---- cvsweb-3.0.1.orig/cvsweb.conf	2004-05-05 01:40:50.000000000 +0200
-+++ cvsweb-3.0.1.new/cvsweb.conf	2004-08-18 22:54:17.000000000 +0200
+diff -Nur cvsweb-3.0.1/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
+--- cvsweb-3.0.1/cvsweb.conf	2004-05-05 01:40:50.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.conf	2004-08-19 14:08:34.000000000 +0200
 @@ -19,7 +19,7 @@
  #   cvsgraph (if you enable $allow_graph)
  #   enscript (if you enable $allow_enscript)
@@ -76,3 +76,12 @@ diff -Nura cvsweb-3.0.1.orig/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
  
  # Charset appended to the Content-Type HTTP header for text/* MIME types.
  # Note that the web server may default to some charset which may take effect
+@@ -470,7 +470,7 @@
+ # settings in the configuration file with command line options, see
+ # doGraph() and doGraphView() in cvsweb.cgi for details.
+ #
+-#$cvsgraph_config = "/etc/cvsgraph.conf";
++#$cvsgraph_config = "/etc/cvsgraph/cvsgraph.conf";
+ 
+ # URL to the CVSHistory script.  This should be absolute (but does not need
+ # to include the host and port if the script is on the same server as
