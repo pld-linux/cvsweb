@@ -1,0 +1,8 @@
+- spec adapterized.
+
+* Tue Nov  9 1999 Peter Hanecak <hanecak@megaloman.sk>
+- updated to 1.79
+
+* Tue Oct 12 1999 Peter Hanecak <hanecak@megaloman.sk>
+- initial spec (based on Ryan Weaver's <ryanw@infohwy.com> gtksee spec
+  because i like the style of it)
