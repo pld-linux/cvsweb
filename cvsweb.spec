@@ -6,9 +6,6 @@ Release:	1
 Epoch:		1
 License:	BSD type
 Group:		Development/Tools
-Group(de):	Entwicklung/Werkzeuge
-Group(fr):	Development/Outils
-Group(pl):	Programowanie/Narzêdzia
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
 Patch0:		%{name}-config.patch
