@@ -1,12 +1,78 @@
-diff -uNr cvsweb.orig/cvsweb.cgi cvsweb/cvsweb.cgi
---- cvsweb.orig/cvsweb.cgi	Sun Oct  3 19:24:58 1999
-+++ cvsweb/cvsweb.cgi	Tue Oct 12 21:27:48 1999
-@@ -73,7 +73,7 @@
- ##### Start of Configuration Area ########
- # == EDIT this == 
- # User configuration is stored in
--$config = $ENV{'CVSWEB_CONFIG'} || '/usr/local/web/apache/conf/cvsweb.conf';
-+$config = $ENV{'CVSWEB_CONFIG'} || '/etc/cvsweb.conf';
+diff -Nura cvsweb-3.0.1.orig/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
+--- cvsweb-3.0.1.orig/cvsweb.cgi	2004-05-08 16:13:40.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.cgi	2004-08-18 22:55:57.000000000 +0200
+@@ -214,7 +214,7 @@
  
- # == Configuration defaults ==
- # Defaults for configuration variables that shouldn't need
+ # == EDIT this ==
+ # Locations to search for user configuration, in order:
+-for (catfile($mydir, 'cvsweb.conf'), '/usr/local/etc/cvsweb/cvsweb.conf') {
++for (catfile($mydir, 'cvsweb.conf'), '/etc/cvsweb.conf') {
+   if (-r $_) {
+     $config = $_;
+     last;
+diff -Nura cvsweb-3.0.1.orig/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
+--- cvsweb-3.0.1.orig/cvsweb.conf	2004-05-05 01:40:50.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.conf	2004-08-18 22:54:17.000000000 +0200
+@@ -19,7 +19,7 @@
+ #   cvsgraph (if you enable $allow_graph)
+ #   enscript (if you enable $allow_enscript)
+ #
+-@command_path = qw(/bin /usr/bin /usr/local/bin);
++@command_path = qw(/bin /usr/bin);
+ 
+ # Search the above directories for each command (prefer gtar over tar).
+ #
+@@ -47,7 +47,7 @@
+ # 'symbolic_name' => ['Name to display',  '/path/to/cvsroot']
+ #
+ @CVSrepositories = (
+-        'local'   => ['Local Repository', '/var/cvs'],
++        'local'   => ['Local Repository', '/home/services/cvsroot'],
+ #       'freebsd' => ['FreeBSD',          '/var/ncvs'],
+ #       'openbsd' => ['OpenBSD',          '/var/ncvs'],
+ #       'netbsd'  => ['NetBSD',           '/var/ncvs'],
+@@ -62,7 +62,7 @@
+ # For example:
+ #
+ #$cvstreedefault = $CVSrepositories[2 * 0];
+-#$cvstreedefault = 'local';
++$cvstreedefault = 'local';
+ 
+ # Bug tracking system linking options ("PR" means Problem Report, as in GNATS)
+ #
+@@ -86,7 +86,7 @@
+ # Manual gateway linking.
+ #
+ $mancgi =
+-    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.0-current&format=html";
++    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.2-current&format=html";
+ 
+ # Defaults for user options.
+ #
+@@ -202,7 +202,7 @@
+ # check out the "mini" versions in the icons/ directory; they have a
+ # width/height of 16/16.
+ #
+-my $iconsdir = '/icons';
++my $iconsdir = '/cvsweb/icons';
+ 
+ # format:          TEXT       ICON-URL                  width height
+ %ICONS = (
+@@ -216,7 +216,7 @@
+ 
+ # An URL where to find the CSS.
+ #
+-$cssurl = '/css/cvsweb.css';
++$cssurl = '/cvsweb/css/cvsweb.css';
+ 
+ # The length to which the last log entry should be truncated when shown
+ # in the directory view.
+@@ -344,7 +344,7 @@
+ # The traditional mime.types file, eg. the one from Apache is fine.
+ # See above where this gets used.
+ #
+-$mime_types = '/usr/local/etc/apache/mime.types';
++$mime_types = '/etc/mime.types';
+ 
+ # Charset appended to the Content-Type HTTP header for text/* MIME types.
+ # Note that the web server may default to some charset which may take effect
