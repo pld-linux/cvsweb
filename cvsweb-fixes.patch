@@ -16,3 +16,16 @@
  	return "<A HREF=\"$where\">$name</A>\n";
  }
  
+--- ./cvsweb.cgi~	2005-04-02 03:11:28.000000000 +0300
++++ ./cvsweb.cgi	2005-04-02 03:18:05.000000000 +0300
+@@ -1253,6 +1253,10 @@
+ 	}
+     }
+     
++	# remove first slash
++	# otherwise we get "Absolute module reference invalid" error from cvs
++    $where =~ s#^/##;
++
+     ### just for the record:
+     ### 'cvs co' seems to have a bug regarding single checkout of
+     ### directories/files having spaces in it;
