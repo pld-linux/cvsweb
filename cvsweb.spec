@@ -1,4 +1,5 @@
 Summary:	visual (www) interface to explore a cvs repository
+Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	1.93
 Release:	1
@@ -34,7 +35,7 @@ wizualnych, kolorowych, umieszczonych obok siebie ró¿nic miêdzy
 plikami oraz zdolno¶æ sortowania widoku plików oraz ukrywania starych
 plików. ¯ywym przyk³adem ulepszonego cvsweba jest cvsweb projektu KDE.
 
-cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repzytorium
+cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repozytorium
 CVS warte eksploracji.
 
 %prep
