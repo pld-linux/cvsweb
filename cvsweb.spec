@@ -2,7 +2,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	1.112
-Release:	4
+Release:	5
 Epoch:		1
 License:	BSD-like
 Group:		Development/Tools
