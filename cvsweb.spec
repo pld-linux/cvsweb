@@ -1,15 +1,17 @@
 Summary:	visual (www) interface to explore a cvs repository
 Name:		cvsweb
-Version:	1.79
+Version:	1.93
 Release:	1
-Serial:		1
+Epoch:		1
 License:	BSD type
 Group:		Development/Tools
 Group(fr):	Development/Outils
 Group(pl):	Programowanie/Narzêdzia
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
-Source0:	%{name}-%{version}.tar.bz2
-Patch0:		%{name}-1.73-config.patch
+Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
+Patch0:		%{name}-config.patch
+Requires:	rcs
+Requires:	httpd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
 
@@ -37,23 +39,25 @@ CVS warte eksploracji.
 
 %prep
 %setup -q -n cvsweb
-%patch -p1
+%patch0 -p1
 
 %build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/{home/httpd/cgi-bin,etc/httpd/conf}
+install -d $RPM_BUILD_ROOT/{home/httpd/cgi-bin,%{_sysconfdir}/httpd}
 
 install cvsweb.cgi $RPM_BUILD_ROOT/home/httpd/cgi-bin
-install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf
+install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
+
+gzip -9nf INSTALL README TODO
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc INSTALL README TODO
+%doc *.gz
 %doc icons
-/home/httpd/cgi-bin/cvsweb.cgi
-%config(noreplace) /etc/httpd/conf/cvsweb.conf
+%attr(755,root,root) /home/httpd/cgi-bin/cvsweb.cgi
+%config(noreplace) %{_sysconfdir}/httpd/cvsweb.conf
