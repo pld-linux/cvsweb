@@ -25,6 +25,17 @@ from view. One living example of the enhanced cvsweb is the KDE cvsweb
 
 cvsweb requires the server to have cvs and a cvs repository worth exploring.
 
+%description -l pl
+cvsweb jest wizualnym interfejsem do eksploracji repozytorium cvs. Jest to
+ulepszona wersja programu cvsweb Hennera Zellera. Do ulepszeñ zaliczyæ mo¿na
+rozpoznawanie i wy¶wietlanie popularnych typów MIME; wizualnych, kolorowych, 
+umieszczonych obok siebie ró¿nic miêdzy plikami oraz zdolno¶æ sortowania 
+widoku plików oraz ukrywania starych plików. ¯ywym przyk³adem ulepszonego
+cvsweba jest cvsweb projektu KDE.
+
+cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repzytorium CVS 
+warte eksploracji.
+
 %prep
 %setup -q -n cvsweb
 %patch -p1
