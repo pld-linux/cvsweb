@@ -2,7 +2,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	1.112
-Release:	5
+Release:	6
 Epoch:		1
 License:	BSD-like
 Group:		Development/Tools
@@ -45,9 +45,9 @@ CVS warte eksploracji.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/{/srv/httpd/cgi-bin,%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT/{/home/services/httpd/cgi-bin,%{_sysconfdir}}
 
-install cvsweb.cgi $RPM_BUILD_ROOT/srv/httpd/cgi-bin
+install cvsweb.cgi $RPM_BUILD_ROOT/home/services/httpd/cgi-bin
 install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
 %clean
@@ -57,5 +57,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc INSTALL README TODO
 %doc icons
-%attr(755,root,root) /srv/httpd/cgi-bin/cvsweb.cgi
+%attr(755,root,root) /home/services/httpd/cgi-bin/cvsweb.cgi
 %config(noreplace) %{_sysconfdir}/cvsweb.conf
