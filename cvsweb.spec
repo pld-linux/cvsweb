@@ -4,7 +4,7 @@ Name:		cvsweb
 Version:	1.93
 Release:	1
 Epoch:		1
-License:	BSD type
+License:	BSD-like
 Group:		Development/Tools
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
