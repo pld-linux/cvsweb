@@ -1,4 +1,4 @@
-Summary:	visual (www) interface to explore a cvs repository
+Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	1.93
@@ -6,6 +6,7 @@ Release:	1
 Epoch:		1
 License:	BSD type
 Group:		Development/Tools
+Group(de):	Entwicklung/Werkzeuge
 Group(fr):	Development/Outils
 Group(pl):	Programowanie/Narzêdzia
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
@@ -39,10 +40,8 @@ cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repozytorium
 CVS warte eksploracji.
 
 %prep
-%setup -q -n cvsweb
+%setup -q -n %{name}
 %patch0 -p1
-
-%build
 
 %install
 rm -rf $RPM_BUILD_ROOT
