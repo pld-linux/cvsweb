@@ -1,52 +1,56 @@
-Summary:	a CGI interface to CVS trees
-Summary(pl):	interfejs CGI do drzew CVS
-Name:		cvsweb
-Version:	0.1
-Release:	1
+%define	name	cvsweb
+%define	version	1.79
+%define	release	1
+%define	serial	1
+
+Summary:	visual (www) interface to explore a cvs repository
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+Serial:		%{serial}
+Copyright:	BSD type
 Group:		Development/Tools
-Group(pl):	Programowanie/Narzêdzia
-Copyright:	Distributable
-Source: 	http://lemming.stud.fh-heilbronn.de/~zeller/download/%{name}.tar.gz
-Patch:		%{name}.patch
-URL:		http://lemming.stud.fh-heilbronn.de/~zeller/cvsweb.cgi
-Vendor:		Henner Zeller <zeller@think.de>
-Requires:	webserver
-Requires:	rcs
-Requires:	cvs
-BuildRoot:	/tmp/%{name}-%{version}-root
-BuildArch:	noarch
+URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
+Source:		%{name}-%{version}.tar.bz2
+Patch:		%{name}-1.73-config.patch
+BuildRoot:	/var/tmp/%{name}-%{version}
+BuildArchitectures: noarch
 
 %description
-a CGI interface to CVS trees.
-By default it search for CVS repository in "/usr/src/CVSROOT".
+cvsweb is a visual (www) interface to explore a cvs repository. This is an
+enhanced cvsweb developed by Henner Zeller. Enhancements include recognition
+and display of popular mime-types, visual, color-coded, side by side diffs
+of changes and the ability sort the file display and to hide old files
+from view. One living example of the enhanced cvsweb is the KDE cvsweb
 
-%description -l pl
-Interfejs CGI do drzew CVS.
-Standardowo repozytorium jest poszukiwane w "/usr/src/CVSROOT".
+cvsweb requires the server to have cvs and a cvs repository worth exploring.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n cvsweb
 %patch -p1
 
+%build
+
 %install
-rm -rf $RPM_BUILD_ROOT
-
-install -d $RPM_BUILD_ROOT/home/httpd/{cgi-bin/,icons/}
-install -d $RPM_BUILD_ROOT/etc/httpd/
-
-install	%{name}.cgi				$RPM_BUILD_ROOT/home/httpd/cgi-bin
-install icons/{miniback,minidir,minitext}.gif	$RPM_BUILD_ROOT/home/httpd/icons
-install %{name}.conf				$RPM_BUILD_ROOT/etc/httpd/
-
-gzip -9nf INSTALL README TODO
+if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT ; fi
+mkdir -p $RPM_BUILD_ROOT/{home/httpd/cgi-bin,etc/httpd/conf}
+install -m 755 cvsweb.cgi $RPM_BUILD_ROOT/home/httpd/cgi-bin
+install -m 644 cvsweb.conf $RPM_BUILD_ROOT/etc/httpd/conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(644,root,root,755)
-%doc {INSTALL,README,TODO}.gz
+%defattr(-,root,root)
+%doc INSTALL README TODO
+%doc icons
+/home/httpd/cgi-bin/cvsweb.cgi
+%config(noreplace) /etc/httpd/conf/cvsweb.conf
 
-%attr(755,root,root) /home/httpd/cgi-bin/*
-%attr(644,root,root) /home/httpd/icons/*.gif
-%attr(644,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/%{name}.conf
+%changelog
+* Tue Nov  9 1999 Peter Hanecak <hanecak@megaloman.sk>
+- updated to 1.79
+
+* Tue Oct 12 1999 Peter Hanecak <hanecak@megaloman.sk>
+- initial spec (based on Ryan Weaver's <ryanw@infohwy.com> gtksee spec
+  because i like the style of it)
