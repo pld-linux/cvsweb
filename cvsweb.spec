@@ -8,6 +8,7 @@ License:	BSD-like
 Group:		Development/Tools
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
+# Source0-md5:	9d97d08f3649c4f972d0bfa996630eef
 Patch0:		%{name}-config.patch
 Requires:	rcs
 Requires:	webserver
