@@ -1,16 +1,24 @@
 Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
-Version:	1.112
-Release:	2
+Version:	3.0.1
+Release:	1
 Epoch:		1
-License:	BSD-like
+License:	BSD
 Group:		Development/Tools
-URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
-Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
-# Source0-md5:	30ff2783ff8e01bf72193902decd0c73
+Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
+# Source0-md5:	08cc35e620773517b392bea4fc1e9f6b
+URL:	http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-fix_perl_options.patch
+Requires:	perl(Cwd)
+Requires:       perl(File::Basename)
+Requires:	perl(File::Path)
+Requires:       perl(File::Spec::Functions)
+Requires:       perl(File::Temp)
+Requires:       perl(IPC::Run)
+Requires:       perl(Time::Local)
+Requires:       perl(URI::Escape)
 Requires:	rcs
 Requires:	webserver
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -38,24 +46,62 @@ plików. ¯ywym przyk³adem ulepszonego cvsweba jest cvsweb projektu KDE.
 cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repozytorium
 CVS warte eksploracji.
 
+%define _cgibindir  /home/services/httpd/cgi-bin
+%define _appdir	 %{_datadir}/%{name}
+
 %prep
-%setup -q -n %{name}
+%setup -q
 %patch0 -p1
-%patch1 -p1
+# no longer needed? See http://tinyurl.com/5ebn3
+#%%patch1 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/{home/services/httpd/cgi-bin,%{_sysconfdir}}
 
-install cvsweb.cgi $RPM_BUILD_ROOT/home/services/httpd/cgi-bin
-install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}/httpd}
+
+install %{name}.cgi	$RPM_BUILD_ROOT%{_cgibindir}
+install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
+install css/*		$RPM_BUILD_ROOT%{_appdir}/css
+install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
+install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
+install cvsweb.conf*	$RPM_BUILD_DIR/%{name}-%{version}/samples
+
+
+echo "Alias /%{name}  %{_appdir}" > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+if [ -f %{_sysconfdir}/httpd/httpd.conf ] && ! grep -q "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
+	echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
+elif [ -d %{_sysconfdir}/httpd/httpd.conf ]; then
+	 ln -sf %{_sysconfdir}/httpd/%{name}.conf %{_sysconfdir}/httpd/httpd.conf/99_%{name}.conf
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	%{_sbindir}/apachectl restart 1>&2
+fi
+
+%preun
+if [ "$1" = "0" ]; then
+	umask 027
+	if [ -d %{_sysconfdir}/httpd/httpd.conf ]; then
+	    rm -f %{_sysconfdir}/httpd/httpd.conf/99_%{name}.conf
+	else
+		grep -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
+			%{_sysconfdir}/httpd/httpd.conf.tmp
+		mv -f %{_sysconfdir}/httpd/httpd.conf.tmp %{_sysconfdir}/httpd/httpd.conf
+		if [ -f /var/lock/subsys/httpd ]; then
+		    	%{_sbindir}/apachectl restart 1>&2
+		fi
+	fi
+fi
+
 %files
 %defattr(644,root,root,755)
-%doc INSTALL README TODO
-%doc icons
-%attr(755,root,root) /home/services/httpd/cgi-bin/cvsweb.cgi
-%config(noreplace) %{_sysconfdir}/cvsweb.conf
+%doc ChangeLog INSTALL NEWS README TODO samples
+%attr(755,root,root) %{_cgibindir}/cvsweb.cgi
+%{_datadir}/%{name}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/%{name}.conf
