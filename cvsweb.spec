@@ -12,13 +12,13 @@ URL:	http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-fix_perl_options.patch
 Requires:	perl(Cwd)
-Requires:       perl(File::Basename)
+Requires:	perl(File::Basename)
 Requires:	perl(File::Path)
-Requires:       perl(File::Spec::Functions)
-Requires:       perl(File::Temp)
-Requires:       perl(IPC::Run)
-Requires:       perl(Time::Local)
-Requires:       perl(URI::Escape)
+Requires:	perl(File::Spec::Functions)
+Requires:	perl(File::Temp)
+Requires:	perl(IPC::Run)
+Requires:	perl(Time::Local)
+Requires:	perl(URI::Escape)
 Requires:	rcs
 Requires:	webserver
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -46,7 +46,7 @@ plików. ¯ywym przyk³adem ulepszonego cvsweba jest cvsweb projektu KDE.
 cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repozytorium
 CVS warte eksploracji.
 
-%define _cgibindir  /home/services/httpd/cgi-bin
+%define _cgibindir /home/services/httpd/cgi-bin
 %define _appdir	 %{_datadir}/%{name}
 
 %prep
@@ -87,13 +87,13 @@ fi
 if [ "$1" = "0" ]; then
 	umask 027
 	if [ -d %{_sysconfdir}/httpd/httpd.conf ]; then
-	    rm -f %{_sysconfdir}/httpd/httpd.conf/99_%{name}.conf
+		rm -f %{_sysconfdir}/httpd/httpd.conf/99_%{name}.conf
 	else
 		grep -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
 			%{_sysconfdir}/httpd/httpd.conf.tmp
 		mv -f %{_sysconfdir}/httpd/httpd.conf.tmp %{_sysconfdir}/httpd/httpd.conf
 		if [ -f /var/lock/subsys/httpd ]; then
-		    	%{_sbindir}/apachectl restart 1>&2
+			%{_sbindir}/apachectl restart 1>&2
 		fi
 	fi
 fi
