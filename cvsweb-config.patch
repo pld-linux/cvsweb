@@ -6,7 +6,7 @@ diff -uNr cvsweb.orig/cvsweb.cgi cvsweb/cvsweb.cgi
  # == EDIT this == 
  # User configuration is stored in
 -$config = $ENV{'CVSWEB_CONFIG'} || '/usr/local/web/apache/conf/cvsweb.conf';
-+$config = $ENV{'CVSWEB_CONFIG'} || '/etc/httpd/cvsweb.conf';
++$config = $ENV{'CVSWEB_CONFIG'} || '/etc/cvsweb.conf';
  
  # == Configuration defaults ==
  # Defaults for configuration variables that shouldn't need
