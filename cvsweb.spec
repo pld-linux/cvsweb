@@ -42,10 +42,10 @@ CVS warte eksploracji.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/{home/httpd/cgi-bin,%{_sysconfdir}/httpd}
+install -d $RPM_BUILD_ROOT/{home/httpd/cgi-bin,%{_sysconfdir}
 
 install cvsweb.cgi $RPM_BUILD_ROOT/home/httpd/cgi-bin
-install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
+install cvsweb.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
 gzip -9nf INSTALL README TODO
 
@@ -57,4 +57,4 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz
 %doc icons
 %attr(755,root,root) /home/httpd/cgi-bin/cvsweb.cgi
-%config(noreplace) %{_sysconfdir}/httpd/cvsweb.conf
+%config(noreplace) %{_sysconfdir}/cvsweb.conf
