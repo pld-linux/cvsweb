@@ -1,14 +1,14 @@
 Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
-Version:	1.93
-Release:	2
+Version:	1.112
+Release:	1
 Epoch:		1
 License:	BSD-like
 Group:		Development/Tools
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
-# Source0-md5:	9d97d08f3649c4f972d0bfa996630eef
+# Source0-md5:	30ff2783ff8e01bf72193902decd0c73
 Patch0:		%{name}-config.patch
 Requires:	rcs
 Requires:	webserver
