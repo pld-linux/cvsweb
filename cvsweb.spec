@@ -2,7 +2,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	1.112
-Release:	6
+Release:	7
 Epoch:		1
 License:	BSD-like
 Group:		Development/Tools
@@ -11,6 +11,8 @@ Source0:	http://stud.fh-heilbronn.de/~zeller/download/%{name}-%{version}.tar.gz
 # Source0-md5:	30ff2783ff8e01bf72193902decd0c73
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-fix_perl_options.patch
+Requires:	perl(IPC::Open2)
+Requires:	perl(Time::Local)
 Requires:	rcs
 Requires:	webserver
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
