@@ -13,7 +13,7 @@ Group:		Development/Tools
 URL:		http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/
 Source:		%{name}-%{version}.tar.bz2
 Patch:		%{name}-1.73-config.patch
-BuildRoot:	/var/tmp/%{name}-%{version}
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArchitectures: noarch
 
 %description
