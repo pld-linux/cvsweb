@@ -1,51 +1,43 @@
+%include	/usr/lib/rpm/macros.perl
 Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
-Version:	3.0.4
+Version:	3.0.5
 Release:	0.1
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
 Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
-# Source0-md5:	c77280df12609b9270ec13172ef49a8c
+# Source0-md5:	572dbb2d66ad6487c0a3536f93023086
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 # for %{_libdir}/cgi-bin
 Requires:	FHS >= 2.3-8
-Requires:	perl(Cwd)
-Requires:	perl(File::Basename)
-Requires:	perl(File::Path)
-Requires:	perl(File::Spec::Functions)
-Requires:	perl(File::Temp)
-Requires:	perl(IPC::Run)
-Requires:	perl(Time::Local)
-Requires:	perl(URI::Escape)
 Requires:	rcs
 Requires:	webserver
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-cvsweb is a visual (www) interface to explore a cvs repository. This
-is an enhanced cvsweb developed by Henner Zeller. Enhancements include
-recognition and display of popular mime-types, visual, color-coded,
-side by side diffs of changes and the ability sort the file display
-and to hide old files from view. One living example of the enhanced
-cvsweb is the KDE cvsweb.
-
-cvsweb requires the server to have cvs and a cvs repository worth
-exploring.
+CVSweb is a WWW interface for CVS repositories with which you can
+browse a file hierarchy on your browser to view each file's revision
+history in a very handy manner. CVSweb was originally written by Bill
+Fenner for the FreeBSD Project. FreeBSD-CVSweb, formerly known as
+knu-CVSweb, is an enhanced version of CVSweb based on Henner Zeller's
+CVSweb, which is an extended version of the original CVSweb. This
+version contains numerous cleanups, bug-fixes, security enhancements
+and feature improvements.
 
 %description -l pl
-cvsweb jest wizualnym interfejsem do eksploracji repozytorium cvs.
-Jest to ulepszona wersja programu cvsweb Hennera Zellera. Do ulepszeñ
-zaliczyæ mo¿na rozpoznawanie i wy¶wietlanie popularnych typów MIME;
-wizualnych, kolorowych, umieszczonych obok siebie ró¿nic miêdzy
-plikami oraz zdolno¶æ sortowania widoku plików oraz ukrywania starych
-plików. ¯ywym przyk³adem ulepszonego cvsweba jest cvsweb projektu KDE.
-
-cvsweb wymaga, by na serwerze by³ zainstalowany CVS oraz repozytorium
-CVS warte eksploracji.
+CVSweb jest interfejsem WWW dla repozytoriów CVS dziêki któremu mo¿na
+przegl±daæ ich zawarto¶æ w przegl±darce WWW widz±c pe³n± historiê
+zmian i numerów rewizji dla ka¿dego z plików. CVSWeb zosta³ stworzony
+przez Billa Fennera dla projektu FreeBSD. FreeBSD-CVSweb dawniej znany
+jako knu-CVSweb jest rozszerzon± wersj± opart± na wersji Hennera
+Zellera, która z kolei by³a oparta na oryginalnej wersji. Kod obecnej
+wersji zosta³ uporz±dkowany i oczysczony, usuniêtych zosta³o równie¿
+wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
+rozbudowano funkcjonalno¶æ.
 
 %define _cgibindir %{_libdir}/cgi-bin
 %define _appdir	 %{_datadir}/%{name}
