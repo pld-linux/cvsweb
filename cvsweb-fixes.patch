@@ -1,0 +1,18 @@
+--- ./cvsweb.cgi~	2005-04-02 03:03:37.000000000 +0300
++++ ./cvsweb.cgi	2005-04-02 03:03:57.000000000 +0300
+@@ -164,6 +164,7 @@
+ $verbose = $v;
+ $checkoutMagic = "~checkout~";
+ $where = defined($ENV{'PATH_INFO'}) ? $ENV{'PATH_INFO'} : "";
++$where =~ tr|/|/|s;
+ $doCheckout = ($where =~ /^\/$checkoutMagic/);
+ $where =~ s|^/($checkoutMagic)?||;
+ $where =~ s|/+$||;
+@@ -936,6 +937,7 @@
+ sub link($$) {
+ 	my($name, $where) = @_;
+ 
++	$where =~ s| |%20|;
+ 	return "<A HREF=\"$where\">$name</A>\n";
+ }
+ 

@@ -10,3 +10,43 @@ diff -uNr cvsweb.orig/cvsweb.cgi cvsweb/cvsweb.cgi
  
  # == Configuration defaults ==
  # Defaults for configuration variables that shouldn't need
+--- ./cvsweb.conf~	2005-04-02 03:00:23.000000000 +0300
++++ ./cvsweb.conf	2005-04-02 03:01:29.000000000 +0300
+@@ -23,14 +23,15 @@
+ 
+ # 'symbolic_name' 'path_to_the_actual_repository'
+ %CVSROOT = (
+-	    'Development' => '/usr/local/src/cvsrep',
+-	    'Configuration' => '/tmp/cvsroot/conf',
+-	    'HTML-files' => '/tmp/upload'
++# Uncomment next line and modify the path if you have only one CVS repository.
++#	    'Development' => '/usr/local/src/cvsrep',
++#	    'Configuration' => '/tmp/cvsroot/conf',
++#	    'HTML-files' => '/tmp/upload'
+ 	    );
+ 
+ # This tree is enabled by default when
+ # you enter the page
+-$cvstreedefault = 'Configuration';
++$cvstreedefault = 'Local-CVS';
+ 
+ ##############
+ # Defaults for UserSettings
+@@ -81,7 +82,7 @@
+ ##############
+ 
+ # color settings in the body-tag
+-$body_tag = '<body text="#000000" bgcolor="#ffffff">';
++$body_tag = '<body text="#000000" bgcolor="#ffffff" link="#0000ff" alink="#ff0000" vlink="#800080">';
+ 
+ # Wanna have a logo on the page ?
+ $logo = '<img src="/icons/apache_pb.gif">';
+@@ -291,6 +292,8 @@
+ 	   "gif"   => "image/gif",
+ 	   "jpeg"  => "image/jpeg",
+ 	   "jpg"   => "image/jpeg",   
++	   "png"   => "image/png",
++	   "xpm"   => "image/xpm",
+ 	   "*"	   => "text/plain",
+ 	   );
+ 
