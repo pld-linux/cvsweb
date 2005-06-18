@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.13
+Release:	0.14
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -23,9 +23,9 @@ Conflicts:	apache1 < 1.3.33-6.3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define _sysconfdir	/etc/%{name}
-%define _appdir		%{_datadir}/%{name}
-%define _cgibindir	%{_libdir}/cgi-bin
+%define		_sysconfdir	/etc/%{name}
+%define		_appdir		%{_datadir}/%{name}
+%define		_cgibindir	%{_libdir}/cgi-bin
 
 %description
 CVSweb is a WWW interface for CVS repositories with which you can
@@ -69,15 +69,25 @@ install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
 
 install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
-#install samples/cvsweb-httpd.conf $RPM_BUILD_DIR%{_sysconfdir}/%{name}/apache.conf
 
-# "a configuration snippet" suitable for apache{1,2}, boa(?).
-# /etc/httpd directory should be common for all webservers (for such "snippets") and their own
-# configuration files should be moved to /etc/{apache{1,2},boa} directories.
-# "here ducuments" are prefered for small configuration files:
 cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-Alias /%{name} %{_appdir}
+Alias /%{name}/ %{_appdir}/
 ScriptAlias /cgi-bin/%{name}.cgi %{_cgibindir}/%{name}.cgi
+
+<Location /cgi-bin/cvsweb.cgi>
+   # See also $charset in cvsweb.conf.
+   #AddDefaultCharset UTF-8
+
+   # mod_perl >= 1.99:
+   <IfModule mod_perl.c>
+	   SetHandler perl-script
+	   PerlResponseHandler ModPerl::Registry
+	   PerlOptions +ParseHeaders
+	   Options ExecCGI
+   </IfModule>
+</Location>
+
+# vim: filetype=apache ts=4 sw=4 et
 EOF
 
 %clean
