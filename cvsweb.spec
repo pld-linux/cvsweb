@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.14
+Release:	0.15
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -89,6 +89,13 @@ ScriptAlias /cgi-bin/%{name}.cgi %{_cgibindir}/%{name}.cgi
 
 # vim: filetype=apache ts=4 sw=4 et
 EOF
+
+%post
+if [ "$1" = 1 ]; then
+%banner %{name} -e <<'EOF'
+You might want to install optionally 'cvsgraph' program.
+EOF
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
