@@ -1,63 +1,87 @@
-diff -uNr cvsweb.orig/cvsweb.cgi cvsweb/cvsweb.cgi
---- cvsweb.orig/cvsweb.cgi	Sun Oct  3 19:24:58 1999
-+++ cvsweb/cvsweb.cgi	Tue Oct 12 21:27:48 1999
-@@ -73,7 +73,7 @@
- ##### Start of Configuration Area ########
- # == EDIT this == 
- # User configuration is stored in
--$config = $ENV{'CVSWEB_CONFIG'} || '/usr/local/web/apache/conf/cvsweb.conf';
-+$config = $ENV{'CVSWEB_CONFIG'} || '/etc/cvsweb.conf';
+diff -Nur cvsweb-3.0.1/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
+--- cvsweb-3.0.1/cvsweb.cgi	2004-05-08 16:13:40.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.cgi	2004-08-19 14:06:58.000000000 +0200
+@@ -214,7 +214,7 @@
  
- # == Configuration defaults ==
- # Defaults for configuration variables that shouldn't need
---- ./cvsweb.conf~	2005-04-02 03:00:23.000000000 +0300
-+++ ./cvsweb.conf	2005-04-02 03:01:29.000000000 +0300
-@@ -23,14 +23,15 @@
+ # == EDIT this ==
+ # Locations to search for user configuration, in order:
+-for (catfile($mydir, 'cvsweb.conf'), '/usr/local/etc/cvsweb/cvsweb.conf') {
++for (catfile($mydir, 'cvsweb.conf'), '/etc/cvsweb/cvsweb.conf') {
+   if (-r $_) {
+     $config = $_;
+     last;
+diff -Nur cvsweb-3.0.1/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
+--- cvsweb-3.0.1/cvsweb.conf	2004-05-05 01:40:50.000000000 +0200
++++ cvsweb-3.0.1.new/cvsweb.conf	2004-08-19 14:08:34.000000000 +0200
+@@ -19,7 +19,7 @@
+ #   cvsgraph (if you enable $allow_graph)
+ #   enscript (if you enable $allow_enscript)
+ #
+-@command_path = qw(/bin /usr/bin /usr/local/bin);
++@command_path = qw(/bin /usr/bin);
  
- # 'symbolic_name' 'path_to_the_actual_repository'
- %CVSROOT = (
--	    'Development' => '/usr/local/src/cvsrep',
--	    'Configuration' => '/tmp/cvsroot/conf',
--	    'HTML-files' => '/tmp/upload'
-+# Uncomment next line and modify the path if you have only one CVS repository.
-+#	    'Development' => '/usr/local/src/cvsrep',
-+#	    'Configuration' => '/tmp/cvsroot/conf',
-+#	    'HTML-files' => '/tmp/upload'
- 	    );
+ # Search the above directories for each command (prefer gtar over tar).
+ #
+@@ -47,7 +47,7 @@
+ # 'symbolic_name' => ['Name to display',  '/path/to/cvsroot']
+ #
+ @CVSrepositories = (
+-        'local'   => ['Local Repository', '/var/cvs'],
++        'local'   => ['Local Repository', '/home/services/cvsroot'],
+ #       'freebsd' => ['FreeBSD',          '/var/ncvs'],
+ #       'openbsd' => ['OpenBSD',          '/var/ncvs'],
+ #       'netbsd'  => ['NetBSD',           '/var/ncvs'],
+@@ -62,7 +62,7 @@
+ # For example:
+ #
+ #$cvstreedefault = $CVSrepositories[2 * 0];
+-#$cvstreedefault = 'local';
++$cvstreedefault = 'local';
  
- # This tree is enabled by default when
- # you enter the page
--$cvstreedefault = 'Configuration';
-+$cvstreedefault = 'Local-CVS';
+ # Bug tracking system linking options ("PR" means Problem Report, as in GNATS)
+ #
+@@ -86,7 +86,7 @@
+ # Manual gateway linking.
+ #
+ $mancgi =
+-    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.0-current&format=html";
++    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.2-current&format=html";
  
- ##############
- # Defaults for UserSettings
-@@ -81,7 +82,7 @@
- ##############
+ # Defaults for user options.
+ #
+@@ -202,7 +202,7 @@
+ # check out the "mini" versions in the icons/ directory; they have a
+ # width/height of 16/16.
+ #
+-my $iconsdir = '/icons';
++my $iconsdir = '/cvsweb/icons';
  
- # color settings in the body-tag
--$body_tag = '<body text="#000000" bgcolor="#ffffff">';
-+$body_tag = '<body text="#000000" bgcolor="#ffffff" link="#0000ff" alink="#ff0000" vlink="#800080">';
+ # format:          TEXT       ICON-URL                  width height
+ %ICONS = (
+@@ -216,7 +216,7 @@
  
- # Wanna have a logo on the page ?
- $logo = '<img src="/icons/apache_pb.gif">';
-@@ -291,6 +292,8 @@
- 	   "gif"   => "image/gif",
- 	   "jpeg"  => "image/jpeg",
- 	   "jpg"   => "image/jpeg",   
-+	   "png"   => "image/png",
-+	   "xpm"   => "image/xpm",
- 	   "*"	   => "text/plain",
- 	   );
+ # An URL where to find the CSS.
+ #
+-$cssurl = '/css/cvsweb.css';
++$cssurl = '/cvsweb/css/cvsweb.css';
  
---- ./cvsweb.conf~	2005-04-02 03:05:40.000000000 +0300
-+++ ./cvsweb.conf	2005-04-02 03:10:52.000000000 +0300
-@@ -279,7 +279,7 @@
- # cvsweb to guess the correct mime-type on
- # checkout; you can use the mime.types from
- # apache here:
--$mime_types = '/usr/local/web/apache/conf/mime.types';
+ # The length to which the last log entry should be truncated when shown
+ # in the directory view.
+@@ -344,7 +344,7 @@
+ # The traditional mime.types file, eg. the one from Apache is fine.
+ # See above where this gets used.
+ #
+-$mime_types = '/usr/local/etc/apache/mime.types';
 +$mime_types = '/etc/mime.types';
  
- # quick mime-type lookup; maps file-suffices to
- # mime-types for displaying checkouts in the browser.
+ # Charset appended to the Content-Type HTTP header for text/* MIME types.
+ # Note that the web server may default to some charset which may take effect
+@@ -470,7 +470,7 @@
+ # settings in the configuration file with command line options, see
+ # doGraph() and doGraphView() in cvsweb.cgi for details.
+ #
+-#$cvsgraph_config = "/etc/cvsgraph.conf";
++#$cvsgraph_config = "/etc/cvsgraph/cvsgraph.conf";
+ 
+ # URL to the CVSHistory script.  This should be absolute (but does not need
+ # to include the host and port if the script is on the same server as

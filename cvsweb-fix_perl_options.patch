@@ -1,9 +1,0 @@
-diff -ur cvsweb.orig/cvsweb.cgi cvsweb/cvsweb.cgi
---- cvsweb.orig/cvsweb.cgi	2003-12-14 22:07:47.000000000 +0100
-+++ cvsweb/cvsweb.cgi	2003-12-14 22:08:11.000000000 +0100
-@@ -1,4 +1,4 @@
--#!/usr/bin/perl -wsT
-+#!/usr/bin/perl -ws
- #
- # cvsweb - a CGI interface to CVS trees.
- #
