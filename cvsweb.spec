@@ -1,6 +1,6 @@
 %include	/usr/lib/rpm/macros.perl
-Summary:	Visual (www) interface to explore a cvs repository
-Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
+Summary:	Visual (www) interface to explore a CVS repository
+Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.5
 Release:	0.15
@@ -44,7 +44,7 @@ zmian i numerów rewizji dla ka¿dego z plików. CVSWeb zosta³ stworzony
 przez Billa Fennera dla projektu FreeBSD. FreeBSD-CVSweb dawniej znany
 jako knu-CVSweb jest rozszerzon± wersj± opart± na wersji Hennera
 Zellera, która z kolei by³a oparta na oryginalnej wersji. Kod obecnej
-wersji zosta³ uporz±dkowany i oczysczony, usuniêtych zosta³o równie¿
+wersji zosta³ uporz±dkowany i oczyszczony, usuniêtych zosta³o równie¿
 wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
 rozbudowano funkcjonalno¶æ.
 
