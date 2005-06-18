@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.3
+Release:	0.13
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -11,12 +11,21 @@ Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
 # Source0-md5:	572dbb2d66ad6487c0a3536f93023086
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
+#BuildRequires:	rpmbuild(macros) >= 1.223
 # for %{_libdir}/cgi-bin
 Requires:	FHS >= 2.3-8
 Requires:	rcs
+# for /etc/mime.types
+Requires:	mailcap
 Requires:	webserver
+# because of wrong module load order
+Conflicts:	apache1 < 1.3.33-6.3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define _sysconfdir	/etc/%{name}
+%define _appdir		%{_datadir}/%{name}
+%define _cgibindir	%{_libdir}/cgi-bin
 
 %description
 CVSweb is a WWW interface for CVS repositories with which you can
@@ -39,12 +48,11 @@ wersji zosta³ uporz±dkowany i oczysczony, usuniêtych zosta³o równie¿
 wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
 rozbudowano funkcjonalno¶æ.
 
-%define _cgibindir %{_libdir}/cgi-bin
-%define _appdir	 %{_datadir}/%{name}
-
 %prep
 %setup -q
 %patch0 -p1
+
+install cvsweb.conf* samples
 
 # remove backups
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -52,78 +60,73 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}/httpd}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}}
 
 install %{name}.cgi	$RPM_BUILD_ROOT%{_cgibindir}
-install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 install css/*		$RPM_BUILD_ROOT%{_appdir}/css
 install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
 install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
-install cvsweb.conf*	$RPM_BUILD_DIR/%{name}-%{version}/samples
+
+install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+#install samples/cvsweb-httpd.conf $RPM_BUILD_DIR%{_sysconfdir}/%{name}/apache.conf
 
 # "a configuration snippet" suitable for apache{1,2}, boa(?).
 # /etc/httpd directory should be common for all webservers (for such "snippets") and their own
 # configuration files should be moved to /etc/{apache{1,2},boa} directories.
 # "here ducuments" are prefered for small configuration files:
-cat <<EOF > $RPM_BUILD_ROOT/etc/httpd/%{name}.conf
-Alias /%{name}  %{_appdir}
+cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+Alias /%{name} %{_appdir}
 ScriptAlias /cgi-bin/%{name}.cgi %{_cgibindir}/%{name}.cgi
 EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-#<deprecated>
-if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*%{name}.conf" /etc/httpd/httpd.conf; then
-	echo "Include /etc/httpd/%{name}.conf" >> /etc/httpd/httpd.conf
-elif [ -d /etc/httpd/httpd.conf ]; then
-	# 09_ instead of 99_ is for ScriptAlias /cgi-bin/cvsweb.cgi ...
-	ln -sf /etc/httpd/%{name}.conf /etc/httpd/httpd.conf/09_%{name}.conf
-fi
-#</deprecated>
+# 09_ instead of 99_ is for ScriptAlias /cgi-bin/cvsweb.cgi ...
+%triggerin -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf -n 09
 
-# support for reloading configuration of various installed webservers.
-# Use `service' instead running initscript or (worse) apachectl directly (think about boa f.e.).
-# `service' is a "next abstraction layer"
-WEBSRV=$(for a in $(rpm -q --whatprovides webserver)
-do rpm -ql $a | awk 'BEGIN { FS = "/" } /init\.d/ { print $5 }' ; done)
-# impossibly - fallback: apache
-[ -z "$WEBSRV" ] && WEBSRV=httpd
+%triggerun -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1 -n 09
 
-for SRV in $WEBSRV
-do
-	[ -f /var/lock/subsys/$SRV ] && /sbin/service $SRV reload 1>&2 || :
-done
+%triggerin -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf -n 09
 
-%preun
-if [ "$1" = "0" ]; then
-	#<deprecated>	
-	umask 027
-	if [ -d /etc/httpd/httpd.conf ]; then
-		rm -f /etc/httpd/httpd.conf/09_%{name}.conf
-	else
-		grep -v "^Include.*%{name}.conf" /etc/httpd/httpd.conf > \
-			/etc/httpd/httpd.conf.tmp || :
-		mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+%triggerun -- apache >= 2.0.0
+%apache_config_uninstall -v 2 -n 09
+
+%triggerpostun -- %{name} < 1:3.0.5-0.11
+# migrate from old config location (only apache2, as there was no apache1 support)
+if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
+	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/apache.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
-	#/<deprecated>
-	
-	WEBSRV=$(for a in $(rpm -q --whatprovides webserver)
-	do rpm -ql $a | awk 'BEGIN { FS = "/" } /init\.d/ { print $5 }' ; done)
+fi
 
-	[ -z "$WEBSRV" ] && WEBSRV=httpd
-
-	for SRV in $WEBSRV
-	do [ -f /var/lock/subsys/$SRV ] && /sbin/service $SRV reload 1>&2 || :
-	done
+# place new config location, as trigger puts config only on first install, do it here.
+# apache1
+if [ -d /etc/apache/conf.d ]; then
+	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/09_%{name}.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
+	fi
+fi
+# apache2
+if [ -d /etc/httpd/httpd.conf ]; then
+	ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/09_%{name}.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog INSTALL NEWS README TODO samples
+%dir %attr(750,root,http) %{_sysconfdir}
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/%{name}.conf
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/apache.conf
 %attr(755,root,root) %{_cgibindir}/cvsweb.cgi
 %{_datadir}/%{name}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
-%config(noreplace) %verify(not md5 mtime size) /etc/httpd/%{name}.conf
