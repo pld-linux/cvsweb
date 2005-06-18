@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.2
+Release:	0.3
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -60,6 +60,7 @@ install css/*		$RPM_BUILD_ROOT%{_appdir}/css
 install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
 install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
 install cvsweb.conf*	$RPM_BUILD_DIR/%{name}-%{version}/samples
+echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 
 # "a configuration snippet" suitable for apache{1,2}, boa(?).
 # /etc/httpd directory should be common for all webservers (for such "snippets") and their own
@@ -118,14 +119,6 @@ if [ "$1" = "0" ]; then
 	do [ -f /var/lock/subsys/$SRV ] && /sbin/service $SRV reload 1>&2 || :
 	done
 fi
-
-# not tested:
-%triggerun -- apache <= 1.9.99, apache1 <= 1.9.99, boa
-echo 'ERROR: cvsweb upgrade failed intentionally.'
-echo 'After upgrade, cvsweb will not operate with apache 1.3.x default configuration.'
-echo 'Probably directive "ScriptAlias /cgi-bin/cvsweb.cgi /usr/lib/cgi-bin/cvsweb.cgi"'
-echo 'must be placed before "ScriptAlias /cgi-bin/ /home/services/httpd/cgi-bin/" .'
-exit 1
 
 %files
 %defattr(644,root,root,755)
