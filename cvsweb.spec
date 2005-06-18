@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a cvs repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium cvs
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.1
+Release:	0.2
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -46,6 +46,9 @@ rozbudowano funkcjonalno¶æ.
 %setup -q
 %patch0 -p1
 
+# remove backups
+find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -81,7 +84,7 @@ fi
 #</deprecated>
 
 # support for reloading configuration of various installed webservers.
-# Use `service' instead running initscript or (worse) apachectrl directly (think about boa f.e.).
+# Use `service' instead running initscript or (worse) apachectl directly (think about boa f.e.).
 # `service' is a "next abstraction layer"
 WEBSRV=$(for a in $(rpm -q --whatprovides webserver)
 do rpm -ql $a | awk 'BEGIN { FS = "/" } /init\.d/ { print $5 }' ; done)
