@@ -11,7 +11,7 @@ Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
 # Source0-md5:	572dbb2d66ad6487c0a3536f93023086
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
-# for %{_prefix/lib/cgi-bin
+# for %{_prefix}/lib/cgi-bin
 Requires:	FHS >= 2.3-8
 BuildRequires:	rpmbuild(macros) >= 1.223
 Requires:	rcs
