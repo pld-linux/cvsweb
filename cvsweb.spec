@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.15
+Release:	0.20
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -100,12 +100,17 @@ fi
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# 09_ instead of 99_ is for ScriptAlias /cgi-bin/cvsweb.cgi ...
+# 79_ instead of 99_ because
+# - ScriptAlias /cgi-bin/ is in 80_mod_alias.conf
+# - SSL is in 40_mod_ssl.conf
+# - mod_auth 51_mod_ssl.conf
+# - mod_rewrite is 70
+# - TODO: fix apache.spec to have ScriptAlias in 80
 %triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf -n 09
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf -n 79
 
 %triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1 -n 09
+%apache_config_uninstall -v 1 -n 79
 
 %triggerin -- apache >= 2.0.0
 %apache_config_install -v 2 -c %{_sysconfdir}/apache.conf -n 09
@@ -113,7 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun -- apache >= 2.0.0
 %apache_config_uninstall -v 2 -n 09
 
-%triggerpostun -- %{name} < 1:3.0.5-0.11
+%triggerpostun -- %{name} < 1:3.0.5-0.20
 # migrate from old config location (only apache2, as there was no apache1 support)
 if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
 	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
@@ -126,7 +131,10 @@ fi
 # place new config location, as trigger puts config only on first install, do it here.
 # apache1
 if [ -d /etc/apache/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/09_%{name}.conf
+	rm -f /etc/apache/conf.d/09_%{name}.conf # old slot
+	rm -f /etc/apache/conf.d/41_%{name}.conf # old slot
+	rm -f /etc/apache/conf.d/61_%{name}.conf # old slot
+	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/79_%{name}.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
