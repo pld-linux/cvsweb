@@ -1,5 +1,4 @@
 %include	/usr/lib/rpm/macros.perl
-%include	/usr/lib/rpm/macros.perl
 Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
