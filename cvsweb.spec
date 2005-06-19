@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.5
-Release:	0.20
+Release:	0.22
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -25,7 +25,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_appdir		%{_datadir}/%{name}
-%define		_cgibindir	%{_libdir}/cgi-bin
 
 %description
 CVSweb is a WWW interface for CVS repositories with which you can
@@ -60,9 +59,9 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_sysconfdir}}
 
-install %{name}.cgi	$RPM_BUILD_ROOT%{_cgibindir}
+install %{name}.cgi	$RPM_BUILD_ROOT%{_appdir}
 install css/*		$RPM_BUILD_ROOT%{_appdir}/css
 install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
 install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
@@ -71,23 +70,30 @@ install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 
 cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-Alias /%{name}/ %{_appdir}/
-ScriptAlias /cgi-bin/%{name}.cgi %{_cgibindir}/%{name}.cgi
+Alias /%{name}/css/ %{_appdir}/css/
+Alias /%{name}/enscript/ %{_appdir}/enscript/
+Alias /%{name}/icons/ %{_appdir}/icons/
+ScriptAlias /cgi-bin/%{name}.cgi %{_appdir}/%{name}.cgi
 
-<Location /cgi-bin/cvsweb.cgi>
-   # See also $charset in cvsweb.conf.
-   #AddDefaultCharset UTF-8
+<Location /cgi-bin/%{name}.cgi>
+	# See also $charset in cvsweb.conf.
+	#AddDefaultCharset UTF-8
 
-   # mod_perl >= 1.99:
-   <IfModule mod_perl.c>
-	   SetHandler perl-script
-	   PerlResponseHandler ModPerl::Registry
-	   PerlOptions +ParseHeaders
-	   Options ExecCGI
-   </IfModule>
+	# mod_perl >= 1.99:
+	<IfModule mod_perl.c>
+		SetHandler perl-script
+		PerlResponseHandler ModPerl::Registry
+		PerlOptions +ParseHeaders
+		Options ExecCGI
+	</IfModule>
+
+	Allow from all
+</Location>
+<Location /%{name}/>
+	Allow from all
 </Location>
 
-# vim: filetype=apache ts=4 sw=4 et
+# vim: filetype=apache ts=4 sw=4
 EOF
 
 %post
@@ -132,8 +138,6 @@ fi
 # apache1
 if [ -d /etc/apache/conf.d ]; then
 	rm -f /etc/apache/conf.d/09_%{name}.conf # old slot
-	rm -f /etc/apache/conf.d/41_%{name}.conf # old slot
-	rm -f /etc/apache/conf.d/61_%{name}.conf # old slot
 	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/79_%{name}.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
@@ -153,5 +157,8 @@ fi
 %dir %attr(750,root,http) %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/%{name}.conf
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/apache.conf
-%attr(755,root,root) %{_cgibindir}/cvsweb.cgi
-%{_datadir}/%{name}
+%dir %{_appdir}
+%{_appdir}/css
+%{_appdir}/enscript
+%{_appdir}/icons
+%attr(755,root,root) %{_appdir}/cvsweb.cgi
