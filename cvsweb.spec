@@ -2,13 +2,13 @@
 Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
-Version:	3.0.5
-Release:	0.22
+Version:	3.0.6
+Release:	0.1
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
 Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
-# Source0-md5:	572dbb2d66ad6487c0a3536f93023086
+# Source0-md5:	0e1eec962b1db00e01b295fff84b6e89
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 BuildRequires:	rpmbuild(macros) >= 1.223
