@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.4
+Release:	0.6
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -14,7 +14,7 @@ URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
-# for %{_libdir}/cgi-bin
+# for %{_prefix}/lib/cgi-bin
 Requires:	FHS >= 2.3-8
 Requires:	rcs
 # for /etc/mime.types
@@ -27,6 +27,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_webapp		%{name}
 %define		_sysconfdir	%{_webapps}/%{_webapp}
 %define		_appdir		%{_datadir}/%{name}
+%define		_cgibindir	%{_prefix}/lib/cgi-bin
 
 %description
 CVSweb is a WWW interface for CVS repositories with which you can
@@ -61,10 +62,9 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}}
 
-install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_sysconfdir}}
-
-install %{name}.cgi	$RPM_BUILD_ROOT%{_appdir}
+install %{name}.cgi	$RPM_BUILD_ROOT%{_cgibindir}
 install css/*		$RPM_BUILD_ROOT%{_appdir}/css
 install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
 install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
@@ -141,8 +141,5 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/%{name}.conf
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/apache.conf
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/httpd.conf
-%dir %{_appdir}
-%{_appdir}/css
-%{_appdir}/enscript
-%{_appdir}/icons
-%attr(755,root,root) %{_appdir}/cvsweb.cgi
+%attr(755,root,root) %{_cgibindir}/cvsweb.cgi
+%{_appdir}
