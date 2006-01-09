@@ -6,7 +6,7 @@ diff -Nur cvsweb-3.0.1/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
  # == EDIT this ==
  # Locations to search for user configuration, in order:
 -for (catfile($mydir, 'cvsweb.conf'), '/usr/local/etc/cvsweb/cvsweb.conf') {
-+for (catfile($mydir, 'cvsweb.conf'), '/etc/cvsweb/cvsweb.conf') {
++for (catfile($mydir, 'cvsweb.conf'), '/etc/webapps/cvsweb/cvsweb.conf') {
    if (-r $_) {
      $config = $_;
      last;
