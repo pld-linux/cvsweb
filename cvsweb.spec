@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.6
+Release:	0.7
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -20,6 +20,8 @@ Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
 Requires:	webapps
+Conflicts:	apache-base < 2.2.0-8
+Conflicts:	apache1 < 1.3.34-6
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -83,6 +85,18 @@ fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
+
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
+
+%triggerin -- apache >= 2.0.0
+%webapp_register httpd %{_webapp}
+
+%triggerun -- apache >= 2.0.0
+%webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} < 1:3.0.6-0.2
 # rescue app config
