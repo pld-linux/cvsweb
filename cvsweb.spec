@@ -3,27 +3,29 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.1
+Release:	0.4
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
 Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
 # Source0-md5:	0e1eec962b1db00e01b295fff84b6e89
+Source1:	%{name}-apache.conf
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
-BuildRequires:	rpmbuild(macros) >= 1.223
+Patch1:		%{name}-emptyscript.patch
+BuildRequires:	rpmbuild(macros) >= 1.268
 # for %{_libdir}/cgi-bin
 Requires:	FHS >= 2.3-8
 Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
-Requires:	webserver
-# because of wrong module load order
-Conflicts:	apache1 < 1.3.33-6.3
+Requires:	webapps
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sysconfdir	/etc/%{name}
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 %define		_appdir		%{_datadir}/%{name}
 
 %description
@@ -50,6 +52,7 @@ rozbudowano funkcjonalno¶æ.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 install cvsweb.conf* samples
 
@@ -68,33 +71,8 @@ install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
 
 install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
-
-cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-Alias /%{name}/css/ %{_appdir}/css/
-Alias /%{name}/enscript/ %{_appdir}/enscript/
-Alias /%{name}/icons/ %{_appdir}/icons/
-ScriptAlias /cgi-bin/%{name}.cgi %{_appdir}/%{name}.cgi
-
-<Location /cgi-bin/%{name}.cgi>
-	# See also $charset in cvsweb.conf.
-	#AddDefaultCharset UTF-8
-
-	# mod_perl >= 1.99:
-	<IfModule mod_perl.c>
-		SetHandler perl-script
-		PerlResponseHandler ModPerl::Registry
-		PerlOptions +ParseHeaders
-		Options ExecCGI
-	</IfModule>
-
-	Allow from all
-</Location>
-<Location /%{name}/>
-	Allow from all
-</Location>
-
-# vim: filetype=apache ts=4 sw=4
-EOF
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %post
 if [ "$1" = 1 ]; then
@@ -106,49 +84,54 @@ fi
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# 79_ instead of 99_ because
-# - ScriptAlias /cgi-bin/ is in 80_mod_alias.conf
-# - SSL is in 40_mod_ssl.conf
-# - mod_auth 51_mod_ssl.conf
-# - mod_rewrite is 70
-# - TODO: fix apache.spec to have ScriptAlias in 80
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf -n 79
+%triggerpostun -- %{name} < 1:3.0.6-0.2
+# rescue app config
+if [ -f /etc/%{name}/cvsweb.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/cvsweb.conf{,.rpmnew}
+	mv -f /etc/%{name}/cvsweb.conf.rpmsave %{_sysconfdir}/cvsweb.conf
+fi
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1 -n 79
-
-%triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf -n 09
-
-%triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2 -n 09
-
-%triggerpostun -- %{name} < 1:3.0.5-0.20
 # migrate from old config location (only apache2, as there was no apache1 support)
 if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
-	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
-	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/apache.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/httpd.conf
+	httpd_reload=1
 fi
 
-# place new config location, as trigger puts config only on first install, do it here.
-# apache1
-if [ -d /etc/apache/conf.d ]; then
-	rm -f /etc/apache/conf.d/09_%{name}.conf # old slot
-	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/79_%{name}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
+# migrate from apache-config macros
+if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_sysconfdir}/apache.conf
 	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_sysconfdir}/httpd.conf
+	fi
+	rm -f /etc/%{name}/apache.conf.rpmsave
 fi
-# apache2
-if [ -d /etc/httpd/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/09_%{name}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+
+if [ -L /etc/apache/conf.d/09_%{name}.conf ]; then
+	rm -f /etc/apache/conf.d/09_%{name}.conf
+	apache_reload=1
+fi
+if [ -L /etc/apache/conf.d/79_%{name}.conf ]; then
+	rm -f /etc/apache/conf.d/79_%{name}.conf
+	apache_reload=1
+fi
+if [ -L /etc/httpd/httpd.conf/09_%{name}.conf ]; then
+	rm -f /etc/httpd/httpd.conf/09_%{name}.conf
+	httpd_reload=1
+fi
+
+if [ "$apache_reload" ]; then
+	/usr/sbin/webapp register apache %{_webapp}
+	%service -q apache reload
+fi
+if [ "$httpd_reload" ]; then
+	/usr/sbin/webapp register httpd %{_webapp}
+	%service -q httpd reload
 fi
 
 %files
@@ -157,6 +140,7 @@ fi
 %dir %attr(750,root,http) %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/%{name}.conf
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/apache.conf
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/httpd.conf
 %dir %{_appdir}
 %{_appdir}/css
 %{_appdir}/enscript
