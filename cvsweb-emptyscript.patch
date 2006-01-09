@@ -1,0 +1,22 @@
+fix for cases when SCRIPT_NAME is empty, ie the cvsweb script is handler to whole vhost:
+
+<VirtualHost *:80>
+    ServerName cvs
+
+    DocumentRoot /usr/share/cvsweb/cvsweb.cgi
+    <Location />
+        Options ExecCGI
+    </Location>
+</VirtualHost>
+
+--- cvsweb-3.0.6/cvsweb.cgi	2006-01-09 23:56:57.000000000 +0200
++++ /tmp/cvsweb.cgi	2006-01-10 00:59:36.000000000 +0200
+@@ -299,7 +299,7 @@
+ $where         =  $pathinfo;
+ $doCheckout    =  $where =~ s|^/$CheckoutMagic/|/|o;
+ $where         =~ s|^/||;
+-$scriptname    =~ s|^/*|/|;
++$scriptname    =~ s|^/*|/| if $scriptname;
+ 
+ # Let's workaround thttpd's stupidity..
+ if ($scriptname =~ m|/$|) {
