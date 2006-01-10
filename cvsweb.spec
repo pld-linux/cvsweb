@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.7
+Release:	0.8
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -30,6 +30,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sysconfdir	%{_webapps}/%{_webapp}
 %define		_appdir		%{_datadir}/%{name}
 %define		_cgibindir	%{_prefix}/lib/cgi-bin
+%define		_enscriptdir	%{_datadir}/enscript/hl
 
 %description
 CVSweb is a WWW interface for CVS repositories with which you can
@@ -52,23 +53,31 @@ wersji zosta³ uporz±dkowany i oczyszczony, usuniêtych zosta³o równie¿
 wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
 rozbudowano funkcjonalno¶æ.
 
+%package -n enscript-%{name}
+Summary:	Enscript language files for CVSweb
+Group:		Applications/Publishing
+Requires:	enscript >= 1.6.3
+
+%description -n enscript-%{name}
+Enscript language files for CVSweb.
+
 %prep
 %setup -q
 %patch0 -p1
 %patch1 -p1
 
-install cvsweb.conf* samples
+cp -a cvsweb.conf* samples
 
 # remove backups
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir}/{css,enscript,icons},%{_cgibindir},%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{css,icons},%{_cgibindir},%{_enscriptdir},%{_sysconfdir}}
 
 install %{name}.cgi	$RPM_BUILD_ROOT%{_cgibindir}
 install css/*		$RPM_BUILD_ROOT%{_appdir}/css
-install enscript/*	$RPM_BUILD_ROOT%{_appdir}/enscript
+install enscript/*	$RPM_BUILD_ROOT%{_enscriptdir}
 install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
 
 install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
@@ -157,3 +166,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) %{_sysconfdir}/httpd.conf
 %attr(755,root,root) %{_cgibindir}/cvsweb.cgi
 %{_appdir}
+
+%files -n enscript-%{name}
+%defattr(644,root,root,755)
+%{_enscriptdir}/*
