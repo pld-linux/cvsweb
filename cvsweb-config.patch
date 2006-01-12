@@ -85,3 +85,11 @@ diff -Nur cvsweb-3.0.1/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
  
  # URL to the CVSHistory script.  This should be absolute (but does not need
  # to include the host and port if the script is on the same server as
+@@ -610,6 +600,7 @@
+    'nroff'        => qr/\.man$/o,
+    'pascal'       => qr/\.p(as|p)?$/io,
+    'perl'         => qr/\.p(m|(er)?l)$/io,
++   'php'          => qr/\.php$/io,
+    'postscript'   => qr/\.e?ps$/io,
+    'python'       => qr/\.py$/o,
+    'rfc'          => qr/\b((rfc|draft)\..*\.txt)$/o,
