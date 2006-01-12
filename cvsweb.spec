@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.8
+Release:	0.9
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -56,7 +56,7 @@ rozbudowano funkcjonalno¶æ.
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
 Group:		Applications/Publishing
-Requires:	enscript >= 1.6.3
+Requires:	enscript >= 1.6.4-1.2
 
 %description -n enscript-%{name}
 Enscript language files for CVSweb.
