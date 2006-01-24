@@ -55,11 +55,15 @@ rozbudowano funkcjonalno¶æ.
 
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
+Summary(pl):	Pliki jêzyka Enscript dla CVSweba
 Group:		Applications/Publishing
 Requires:	enscript >= 1.6.4-1.2
 
 %description -n enscript-%{name}
 Enscript language files for CVSweb.
+
+%description -n enscript-%{name} -l pl
+Pliki jêzyka Enscript dla CVSweba.
 
 %prep
 %setup -q
@@ -85,15 +89,15 @@ echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 if [ "$1" = 1 ]; then
 %banner %{name} -e <<'EOF'
 You might want to install optionally 'cvsgraph' program.
 EOF
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- apache1
 %webapp_register apache %{_webapp}
