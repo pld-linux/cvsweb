@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	2
+Release:	3
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -15,7 +15,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 # for %{_prefix}/lib/cgi-bin
-Requires:	FHS >= 2.3-8
+Requires:	filesystem >= 3.0-11
 Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
