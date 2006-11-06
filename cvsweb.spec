@@ -15,7 +15,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 # for %{_prefix}/lib/cgi-bin
-Requires:	filesystem >= 3.0-11
+Requires:	filesystem >= 2.0-1
 Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
