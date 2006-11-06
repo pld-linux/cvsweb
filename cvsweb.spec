@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.8
+Release:	3
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -15,7 +15,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 # for %{_prefix}/lib/cgi-bin
-Requires:	FHS >= 2.3-8
+Requires:	filesystem >= 2.0-1
 Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
@@ -55,11 +55,15 @@ rozbudowano funkcjonalno¶æ.
 
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
+Summary(pl):	Pliki jêzyka Enscript dla CVSweba
 Group:		Applications/Publishing
-Requires:	enscript >= 1.6.3
+Requires:	enscript >= 1.6.4-1.2
 
 %description -n enscript-%{name}
 Enscript language files for CVSweb.
+
+%description -n enscript-%{name} -l pl
+Pliki jêzyka Enscript dla CVSweba.
 
 %prep
 %setup -q
@@ -85,6 +89,9 @@ echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 if [ "$1" = 1 ]; then
 %banner %{name} -e <<'EOF'
@@ -92,19 +99,16 @@ You might want to install optionally 'cvsgraph' program.
 EOF
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache >= 2.0.0
+%triggerin -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache >= 2.0.0
+%triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} < 1:3.0.6-0.2
