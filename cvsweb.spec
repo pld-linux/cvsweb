@@ -1,6 +1,6 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Visual (www) interface to explore a CVS repository
-Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
+Summary(pl.UTF-8):   Wizualny (WWW) interfejs do przeglÄ…dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
 Release:	3
@@ -42,28 +42,28 @@ CVSweb, which is an extended version of the original CVSweb. This
 version contains numerous cleanups, bug-fixes, security enhancements
 and feature improvements.
 
-%description -l pl
-CVSweb jest interfejsem WWW dla repozytoriów CVS dziêki któremu mo¿na
-przegl±daæ ich zawarto¶æ w przegl±darce WWW widz±c pe³n± historiê
-zmian i numerów rewizji dla ka¿dego z plików. CVSWeb zosta³ stworzony
+%description -l pl.UTF-8
+CVSweb jest interfejsem WWW dla repozytoriÃ³w CVS dziÄ™ki ktÃ³remu moÅ¼na
+przeglÄ…daÄ‡ ich zawartoÅ›Ä‡ w przeglÄ…darce WWW widzÄ…c peÅ‚nÄ… historiÄ™
+zmian i numerÃ³w rewizji dla kaÅ¼dego z plikÃ³w. CVSWeb zostaÅ‚ stworzony
 przez Billa Fennera dla projektu FreeBSD. FreeBSD-CVSweb dawniej znany
-jako knu-CVSweb jest rozszerzon± wersj± opart± na wersji Hennera
-Zellera, która z kolei by³a oparta na oryginalnej wersji. Kod obecnej
-wersji zosta³ uporz±dkowany i oczyszczony, usuniêtych zosta³o równie¿
-wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
-rozbudowano funkcjonalno¶æ.
+jako knu-CVSweb jest rozszerzonÄ… wersjÄ… opartÄ… na wersji Hennera
+Zellera, ktÃ³ra z kolei byÅ‚a oparta na oryginalnej wersji. Kod obecnej
+wersji zostaÅ‚ uporzÄ…dkowany i oczyszczony, usuniÄ™tych zostaÅ‚o rÃ³wnieÅ¼
+wiele bÅ‚Ä™dÃ³w. Wprowadzono takÅ¼e duÅ¼o poprawek bezpieczeÅ„stwa oraz
+rozbudowano funkcjonalnoÅ›Ä‡.
 
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
-Summary(pl):	Pliki jêzyka Enscript dla CVSweba
+Summary(pl.UTF-8):   Pliki jÄ™zyka Enscript dla CVSweba
 Group:		Applications/Publishing
 Requires:	enscript >= 1.6.4-1.2
 
 %description -n enscript-%{name}
 Enscript language files for CVSweb.
 
-%description -n enscript-%{name} -l pl
-Pliki jêzyka Enscript dla CVSweba.
+%description -n enscript-%{name} -l pl.UTF-8
+Pliki jÄ™zyka Enscript dla CVSweba.
 
 %prep
 %setup -q
