@@ -1,6 +1,6 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Visual (www) interface to explore a CVS repository
-Summary(pl.UTF-8):   Wizualny (WWW) interfejs do przeglądania repozytorium CVS
+Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglądania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
 Release:	3
@@ -55,7 +55,7 @@ rozbudowano funkcjonalność.
 
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
-Summary(pl.UTF-8):   Pliki języka Enscript dla CVSweba
+Summary(pl.UTF-8):	Pliki języka Enscript dla CVSweba
 Group:		Applications/Publishing
 Requires:	enscript >= 1.6.4-1.2
 
