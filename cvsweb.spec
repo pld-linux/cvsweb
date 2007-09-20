@@ -1,9 +1,9 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Visual (www) interface to explore a CVS repository
-Summary(pl):	Wizualny (WWW) interfejs do przegl±dania repozytorium CVS
+Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglÄ…dania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	0.8
+Release:	5
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -15,10 +15,11 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 # for %{_prefix}/lib/cgi-bin
-Requires:	FHS >= 2.3-8
+Requires:	filesystem >= 2.0-1
 Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
+Requires:	diffutils
 Requires:	webapps
 Conflicts:	apache-base < 2.2.0-8
 Conflicts:	apache1 < 1.3.34-6
@@ -42,24 +43,28 @@ CVSweb, which is an extended version of the original CVSweb. This
 version contains numerous cleanups, bug-fixes, security enhancements
 and feature improvements.
 
-%description -l pl
-CVSweb jest interfejsem WWW dla repozytoriów CVS dziêki któremu mo¿na
-przegl±daæ ich zawarto¶æ w przegl±darce WWW widz±c pe³n± historiê
-zmian i numerów rewizji dla ka¿dego z plików. CVSWeb zosta³ stworzony
+%description -l pl.UTF-8
+CVSweb jest interfejsem WWW dla repozytoriÃ³w CVS dziÄ™ki ktÃ³remu moÅ¼na
+przeglÄ…daÄ‡ ich zawartoÅ›Ä‡ w przeglÄ…darce WWW widzÄ…c peÅ‚nÄ… historiÄ™
+zmian i numerÃ³w rewizji dla kaÅ¼dego z plikÃ³w. CVSWeb zostaÅ‚ stworzony
 przez Billa Fennera dla projektu FreeBSD. FreeBSD-CVSweb dawniej znany
-jako knu-CVSweb jest rozszerzon± wersj± opart± na wersji Hennera
-Zellera, która z kolei by³a oparta na oryginalnej wersji. Kod obecnej
-wersji zosta³ uporz±dkowany i oczyszczony, usuniêtych zosta³o równie¿
-wiele b³êdów. Wprowadzono tak¿e du¿o poprawek bezpieczeñstwa oraz
-rozbudowano funkcjonalno¶æ.
+jako knu-CVSweb jest rozszerzonÄ… wersjÄ… opartÄ… na wersji Hennera
+Zellera, ktÃ³ra z kolei byÅ‚a oparta na oryginalnej wersji. Kod obecnej
+wersji zostaÅ‚ uporzÄ…dkowany i oczyszczony, usuniÄ™tych zostaÅ‚o rÃ³wnieÅ¼
+wiele bÅ‚Ä™dÃ³w. Wprowadzono takÅ¼e duÅ¼o poprawek bezpieczeÅ„stwa oraz
+rozbudowano funkcjonalnoÅ›Ä‡.
 
 %package -n enscript-%{name}
 Summary:	Enscript language files for CVSweb
+Summary(pl.UTF-8):	Pliki jÄ™zyka Enscript dla CVSweba
 Group:		Applications/Publishing
-Requires:	enscript >= 1.6.3
+Requires:	enscript >= 1.6.4-1.2
 
 %description -n enscript-%{name}
 Enscript language files for CVSweb.
+
+%description -n enscript-%{name} -l pl.UTF-8
+Pliki jÄ™zyka Enscript dla CVSweba.
 
 %prep
 %setup -q
@@ -85,6 +90,9 @@ echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 if [ "$1" = 1 ]; then
 %banner %{name} -e <<'EOF'
@@ -92,19 +100,16 @@ You might want to install optionally 'cvsgraph' program.
 EOF
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache >= 2.0.0
+%triggerin -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache >= 2.0.0
+%triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} < 1:3.0.6-0.2
