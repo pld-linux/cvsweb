@@ -1,16 +1,15 @@
-diff -Nur cvsweb-3.0.1/cvsweb.cgi cvsweb-3.0.1.new/cvsweb.cgi
---- cvsweb-3.0.1/cvsweb.cgi	2004-05-08 16:13:40.000000000 +0200
-+++ cvsweb-3.0.1.new/cvsweb.cgi	2004-08-19 14:06:58.000000000 +0200
-@@ -214,7 +214,7 @@
+--- cvsweb-3.0.1.new/cvsweb.cgi	2004-08-19 14:06:58.000000000 +0200
++++ cvsweb-3.0.6/cvsweb.cgi	2007-10-06 15:27:43.849021395 +0300
+@@ -214,7 +214,8 @@
  
  # == EDIT this ==
  # Locations to search for user configuration, in order:
 -for (catfile($mydir, 'cvsweb.conf'), '/usr/local/etc/cvsweb/cvsweb.conf') {
-+for (catfile($mydir, 'cvsweb.conf'), '/etc/webapps/cvsweb/cvsweb.conf') {
++my ($CVSWEB_CONFIG) = $1 if $ENV{CVSWEB_CONFIG} =~ /(.*)/; # untaint
++for ($CVSWEB_CONFIG, catfile($mydir, 'cvsweb.conf'), '/etc/webapps/cvsweb/cvsweb.conf') {
    if (-r $_) {
      $config = $_;
      last;
-diff -Nur cvsweb-3.0.1/cvsweb.conf cvsweb-3.0.1.new/cvsweb.conf
 --- cvsweb-3.0.1/cvsweb.conf	2004-05-05 01:40:50.000000000 +0200
 +++ cvsweb-3.0.1.new/cvsweb.conf	2004-08-19 14:08:34.000000000 +0200
 @@ -19,7 +19,7 @@
