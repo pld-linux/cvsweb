@@ -14,12 +14,12 @@ URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
+Requires:	diffutils
 # for %{_prefix}/lib/cgi-bin
 Requires:	filesystem >= 3.0-11
-Requires:	rcs
 # for /etc/mime.types
 Requires:	mailcap
-Requires:	diffutils
+Requires:	rcs
 Requires:	webapps
 Conflicts:	apache-base < 2.2.0-8
 Conflicts:	apache1 < 1.3.34-6
