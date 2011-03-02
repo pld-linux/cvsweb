@@ -1,0 +1,41 @@
+--- cvsweb-3.0.6/cvsweb.cgi	2011-03-02 11:04:52.956814108 +0200
+--- cvsweb-3.0.6/cvsweb.cgi	2011-03-02 11:04:47.426931825 +0200
+@@ -67,7 +67,7 @@
+   %alltags %fileinfo %tags @branchnames %nameprinted
+   %symrev %revsym @allrevisions %date %author @revdisplayorder
+   @revisions %state %difflines %log %branchpoint @revorder $keywordsubstitution
+-  $prcgi @prcategories $re_prcategories $prkeyword $re_prkeyword $mancgi
++  $prcgi @prcategories $re_prcategories $prkeyword $re_prkeyword $mancgi $cveurl
+   $doCheckout $scriptname $scriptwhere
+   $where $Browser $nofilelinks $maycompress @stickyvars %funcline_regexp
+   $is_links $is_lynx $is_w3m $is_msie $is_mozilla3 $is_textbased
+@@ -1569,6 +1584,17 @@
+          }egx;
+       } $_;
+     }
++
++    # CVE urls
++    if (defined($cveurl)) {
++        $_ = htmlify_sub {
++          s{
++            (\bCVE-\d{4}-\d{4}\b)
++           }{
++             &link($1, sprintf($cveurl, $1))
++           }egox;
++        } $_;
++    }
+   }
+ 
+   return $_;
+--- cvsweb-3.0.6/cvsweb.conf~	2011-03-02 11:06:29.000000000 +0200
++++ cvsweb-3.0.6/cvsweb.conf	2011-03-02 11:08:14.986810727 +0200
+@@ -82,6 +82,9 @@
+ #     'Yet another one' => 'http://192.168.0.2/cgi-bin/cvsweb.cgi/',
+ #);
+ 
++# CVE Links
++#$cveurl = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=%s";
++
+ # Bug tracking system linking options ("PR" means Problem Report, as in GNATS)
+ # This will be done only for views for which $allow_*_extra below is true.
+ #

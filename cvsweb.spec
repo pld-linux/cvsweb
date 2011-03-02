@@ -13,6 +13,7 @@ Source1:	%{name}-apache.conf
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
+Patch2:		cveurl.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	diffutils
 # for %{_prefix}/lib/cgi-bin
@@ -70,6 +71,7 @@ Pliki języka Enscript dla CVSweba.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 cp -a cvsweb.conf* samples
 
