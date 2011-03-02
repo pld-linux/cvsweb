@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglądania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	5
+Release:	6
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
