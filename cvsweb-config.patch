@@ -44,7 +44,7 @@
  #
  $mancgi =
 -    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.0-current&format=html";
-+    "http://www.FreeBSD.org/cgi/man.cgi?apropos=0&sektion=%s&query=%s&manpath=FreeBSD+5.2-current&format=html";
++    "http://linux.die.net/man/%s/%s";
  
  # Defaults for user options.
  #
