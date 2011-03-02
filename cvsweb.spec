@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglądania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	4
+Release:	5
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -14,6 +14,7 @@ URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
 Patch2:		cveurl.patch
+Patch3:		cvsnt.patch
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	diffutils
 # for %{_prefix}/lib/cgi-bin
@@ -72,6 +73,7 @@ Pliki języka Enscript dla CVSweba.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 cp -a cvsweb.conf* samples
 

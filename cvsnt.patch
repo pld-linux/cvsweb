@@ -1,0 +1,12 @@
+--- cvsweb-3.0.6/cvsweb.cgi	2011-03-02 11:08:32.353458275 +0200
+--- cvsweb-3.0.6/cvsweb.cgi	2011-03-02 11:04:47.426931825 +0200
+@@ -990,6 +1002,9 @@
+     # Check whether to show the CVSROOT path
+     next if ($input{hidecvsroot} && $where eq '/' && $file eq 'CVSROOT');
+ 
++    # ignore CVSNT control dir
++    next if ($file eq 'CVS');
++
+     # Is it a directory?
+     my $isdir = -d catdir($fullname, $file);
+ 
