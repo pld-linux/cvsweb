@@ -3,13 +3,14 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglądania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	6
+Release:	7
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
 Source0:	http://people.FreeBSD.org/~scop/cvsweb/%{name}-%{version}.tar.gz
 # Source0-md5:	0e1eec962b1db00e01b295fff84b6e89
 Source1:	%{name}-apache.conf
+Source2:	%{name}-httpd.conf
 URL:		http://www.freebsd.org/projects/cvsweb.html
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-emptyscript.patch
@@ -23,7 +24,7 @@ Requires:	filesystem >= 3.0-11
 Requires:	mailcap
 Requires:	rcs
 Requires:	webapps
-Conflicts:	apache-base < 2.2.0-8
+Conflicts:	apache-base < 2.4.0-1
 Conflicts:	apache1 < 1.3.34-6
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -92,7 +93,7 @@ install icons/*		$RPM_BUILD_ROOT%{_appdir}/icons
 install %{name}.conf	$RPM_BUILD_ROOT%{_sysconfdir}
 echo '# vim:syn=perl' >> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -110,10 +111,10 @@ fi
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} < 1:3.0.6-0.2
