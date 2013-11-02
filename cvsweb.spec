@@ -3,7 +3,7 @@ Summary:	Visual (www) interface to explore a CVS repository
 Summary(pl.UTF-8):	Wizualny (WWW) interfejs do przeglądania repozytorium CVS
 Name:		cvsweb
 Version:	3.0.6
-Release:	6
+Release:	8
 Epoch:		1
 License:	BSD
 Group:		Development/Tools
@@ -23,6 +23,7 @@ Requires:	filesystem >= 3.0-11
 Requires:	mailcap
 Requires:	rcs
 Requires:	webapps
+Requires:	webserver(access)
 Conflicts:	apache-base < 2.2.0-8
 Conflicts:	apache1 < 1.3.34-6
 BuildArch:	noarch
